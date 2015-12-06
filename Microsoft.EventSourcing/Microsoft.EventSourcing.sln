@@ -1,0 +1,103 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.EventSourcing.Tests", "Microsoft.EventSourcing.Tests\Microsoft.EventSourcing.Tests.csproj", "{EBF6CDFC-2F75-4166-9E6B-B10C1F8442D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.EventSourcing.Processors", "Microsoft.EventSourcing.Processors\Microsoft.EventSourcing.Processors.csproj", "{70F930CC-01FF-4EE4-868E-448271A9C2D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.EventSourcing.Domain", "Microsoft.EventSourcing.Domain\Microsoft.EventSourcing.Domain.csproj", "{84676E35-807E-44F7-82EA-EBA955550906}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.EventSourcing.Common", "Microsoft.EventSourcing.Common\Microsoft.EventSourcing.Common.csproj", "{84A579CC-45A9-4C85-89FC-3D5CB97539BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.EventSourcing.Server", "Microsoft.EventSourcing.Server\Microsoft.EventSourcing.Server.csproj", "{EA795FF8-CE41-4FDA-9F97-1454D9AEB474}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.EventSourcing.CQRSClient", "Microsoft.EventSourcing.CQRSClient\Microsoft.EventSourcing.CQRSClient.csproj", "{27BB4BD2-D827-4E50-8265-CB26B1DEFE50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.EventSourcing.TableStorageDal", "Microsoft.EventSourcing.TableStorageDal\Microsoft.EventSourcing.TableStorageDal.csproj", "{10CD965A-B886-42A6-B5FA-D9DB3C2B6763}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.EventSourcing.InMemoryProviders", "Microsoft.EventSourcing.InMemoryDal\Microsoft.EventSourcing.InMemoryProviders.csproj", "{6B262C08-04C7-4002-B297-375436D58C45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.EventSourcing.ServiceBusMessaging", "Microsoft.EventSourcing.ServiceBusMessaging\Microsoft.EventSourcing.ServiceBusMessaging.csproj", "{975B0A72-32F3-4F3B-A3E9-EF4EF398A582}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EBF6CDFC-2F75-4166-9E6B-B10C1F8442D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBF6CDFC-2F75-4166-9E6B-B10C1F8442D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBF6CDFC-2F75-4166-9E6B-B10C1F8442D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBF6CDFC-2F75-4166-9E6B-B10C1F8442D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70F930CC-01FF-4EE4-868E-448271A9C2D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70F930CC-01FF-4EE4-868E-448271A9C2D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70F930CC-01FF-4EE4-868E-448271A9C2D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70F930CC-01FF-4EE4-868E-448271A9C2D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84676E35-807E-44F7-82EA-EBA955550906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84676E35-807E-44F7-82EA-EBA955550906}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84676E35-807E-44F7-82EA-EBA955550906}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84676E35-807E-44F7-82EA-EBA955550906}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84A579CC-45A9-4C85-89FC-3D5CB97539BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84A579CC-45A9-4C85-89FC-3D5CB97539BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84A579CC-45A9-4C85-89FC-3D5CB97539BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84A579CC-45A9-4C85-89FC-3D5CB97539BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA795FF8-CE41-4FDA-9F97-1454D9AEB474}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA795FF8-CE41-4FDA-9F97-1454D9AEB474}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA795FF8-CE41-4FDA-9F97-1454D9AEB474}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA795FF8-CE41-4FDA-9F97-1454D9AEB474}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27BB4BD2-D827-4E50-8265-CB26B1DEFE50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27BB4BD2-D827-4E50-8265-CB26B1DEFE50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27BB4BD2-D827-4E50-8265-CB26B1DEFE50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27BB4BD2-D827-4E50-8265-CB26B1DEFE50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10CD965A-B886-42A6-B5FA-D9DB3C2B6763}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10CD965A-B886-42A6-B5FA-D9DB3C2B6763}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10CD965A-B886-42A6-B5FA-D9DB3C2B6763}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10CD965A-B886-42A6-B5FA-D9DB3C2B6763}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B262C08-04C7-4002-B297-375436D58C45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B262C08-04C7-4002-B297-375436D58C45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B262C08-04C7-4002-B297-375436D58C45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B262C08-04C7-4002-B297-375436D58C45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{975B0A72-32F3-4F3B-A3E9-EF4EF398A582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{975B0A72-32F3-4F3B-A3E9-EF4EF398A582}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{975B0A72-32F3-4F3B-A3E9-EF4EF398A582}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{975B0A72-32F3-4F3B-A3E9-EF4EF398A582}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 10
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://fchapleau.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Microsoft.EventSourcing.Common\\Microsoft.EventSourcing.Common.csproj
+		SccProjectName1 = Microsoft.EventSourcing.Common
+		SccLocalPath1 = Microsoft.EventSourcing.Common
+		SccProjectUniqueName2 = Microsoft.EventSourcing.CQRSClient\\Microsoft.EventSourcing.CQRSClient.csproj
+		SccProjectName2 = Microsoft.EventSourcing.CQRSClient
+		SccLocalPath2 = Microsoft.EventSourcing.CQRSClient
+		SccProjectUniqueName3 = Microsoft.EventSourcing.Domain\\Microsoft.EventSourcing.Domain.csproj
+		SccProjectName3 = Microsoft.EventSourcing.Domain
+		SccLocalPath3 = Microsoft.EventSourcing.Domain
+		SccProjectUniqueName4 = Microsoft.EventSourcing.InMemoryDal\\Microsoft.EventSourcing.InMemoryProviders.csproj
+		SccProjectName4 = Microsoft.EventSourcing.InMemoryDal
+		SccLocalPath4 = Microsoft.EventSourcing.InMemoryDal
+		SccProjectUniqueName5 = Microsoft.EventSourcing.Processors\\Microsoft.EventSourcing.Processors.csproj
+		SccProjectName5 = Microsoft.EventSourcing.Processors
+		SccLocalPath5 = Microsoft.EventSourcing.Processors
+		SccProjectUniqueName6 = Microsoft.EventSourcing.Server\\Microsoft.EventSourcing.Server.csproj
+		SccProjectName6 = Microsoft.EventSourcing.Server
+		SccLocalPath6 = Microsoft.EventSourcing.Server
+		SccProjectUniqueName7 = Microsoft.EventSourcing.ServiceBusMessaging\\Microsoft.EventSourcing.ServiceBusMessaging.csproj
+		SccProjectName7 = Microsoft.EventSourcing.ServiceBusMessaging
+		SccLocalPath7 = Microsoft.EventSourcing.ServiceBusMessaging
+		SccProjectUniqueName8 = Microsoft.EventSourcing.TableStorageDal\\Microsoft.EventSourcing.TableStorageDal.csproj
+		SccProjectName8 = Microsoft.EventSourcing.TableStorageDal
+		SccLocalPath8 = Microsoft.EventSourcing.TableStorageDal
+		SccProjectUniqueName9 = Microsoft.EventSourcing.Tests\\Microsoft.EventSourcing.Tests.csproj
+		SccProjectName9 = Microsoft.EventSourcing.Tests
+		SccLocalPath9 = Microsoft.EventSourcing.Tests
+	EndGlobalSection
+EndGlobal

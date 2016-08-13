@@ -1,0 +1,5 @@
+V:\GitHub.EventSourcing\EventSourcing\Microsoft.EventSourcing\Microsoft.EventSourcing.CQRSClient\bin\Debug\Microsoft.EventSourcing.CQRSClient.dll
+V:\GitHub.EventSourcing\EventSourcing\Microsoft.EventSourcing\Microsoft.EventSourcing.CQRSClient\bin\Debug\Microsoft.EventSourcing.CQRSClient.pdb
+V:\GitHub.EventSourcing\EventSourcing\Microsoft.EventSourcing\Microsoft.EventSourcing.CQRSClient\obj\Debug\Microsoft.EventSourcing.CQRSClient.csprojResolveAssemblyReference.cache
+V:\GitHub.EventSourcing\EventSourcing\Microsoft.EventSourcing\Microsoft.EventSourcing.CQRSClient\obj\Debug\Microsoft.EventSourcing.CQRSClient.dll
+V:\GitHub.EventSourcing\EventSourcing\Microsoft.EventSourcing\Microsoft.EventSourcing.CQRSClient\obj\Debug\Microsoft.EventSourcing.CQRSClient.pdb

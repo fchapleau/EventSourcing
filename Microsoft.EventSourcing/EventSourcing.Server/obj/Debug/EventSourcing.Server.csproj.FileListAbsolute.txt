@@ -1,0 +1,3 @@
+V:\GitHub.EventSourcing\EventSourcing\Microsoft.EventSourcing\Microsoft.EventSourcing.Server\obj\Debug\EventSourcing.Server.csprojResolveAssemblyReference.cache
+V:\GitHub.EventSourcing\EventSourcing\Microsoft.EventSourcing\Microsoft.EventSourcing.Server\obj\Debug\Microsoft.EventSourcing.Server.exe
+V:\GitHub.EventSourcing\EventSourcing\Microsoft.EventSourcing\Microsoft.EventSourcing.Server\obj\Debug\Microsoft.EventSourcing.Server.pdb

@@ -4,3 +4,9 @@ V:\GitHub.EventSourcing\EventSourcing\Microsoft.EventSourcing\EventSourcing.Test
 V:\GitHub.EventSourcing\EventSourcing\Microsoft.EventSourcing\EventSourcing.Tests.Common\bin\Debug\EventSourcing.Tests.Common.pdb
 V:\GitHub.EventSourcing\EventSourcing\Microsoft.EventSourcing\EventSourcing.Tests.Common\obj\Debug\EventSourcing.Tests.Common.dll
 V:\GitHub.EventSourcing\EventSourcing\Microsoft.EventSourcing\EventSourcing.Tests.Common\obj\Debug\EventSourcing.Tests.Common.pdb
+V:\GitHub.EventSourcing\EventSourcing\EventSourcing\EventSourcing.Tests.Common\bin\Debug\EventSourcing.Tests.Common.dll.config
+V:\GitHub.EventSourcing\EventSourcing\EventSourcing\EventSourcing.Tests.Common\bin\Debug\EventSourcing.Tests.Common.dll
+V:\GitHub.EventSourcing\EventSourcing\EventSourcing\EventSourcing.Tests.Common\bin\Debug\EventSourcing.Tests.Common.pdb
+V:\GitHub.EventSourcing\EventSourcing\EventSourcing\EventSourcing.Tests.Common\obj\Debug\EventSourcing.Tests.Common.csprojResolveAssemblyReference.cache
+V:\GitHub.EventSourcing\EventSourcing\EventSourcing\EventSourcing.Tests.Common\obj\Debug\EventSourcing.Tests.Common.dll
+V:\GitHub.EventSourcing\EventSourcing\EventSourcing\EventSourcing.Tests.Common\obj\Debug\EventSourcing.Tests.Common.pdb

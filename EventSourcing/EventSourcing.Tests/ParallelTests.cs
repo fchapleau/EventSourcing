@@ -43,7 +43,7 @@ namespace EventSourcing.Tests
         //    ParallelSendEventsAndValidate(5000);
         //}
 
-        [TestMethod]
+        //[TestMethod]
         //public void ParallelSend50SequentialProcessing()
         //{
         //    Initialize(1, 1);

@@ -21,7 +21,7 @@ namespace EventSourcing.Tests.Server
 
             var Factory = new EventSourceFactory<SymbolEntity>(
                 new TableStorageDataAccessLayer<SymbolEntity>(Constants.StorageAccountName, Constants.StorageAccountKey),
-                typeof(SymbolAgregate),
+                new List<Type> { typeof(SymbolAgregate) },
                 logger,
                 new ServiceBusEventSourceClient(Constants.ServiceBusConnectionString, Constants.ServiceBusReadSideQueue),
                 new ServiceBusEventSourceClient(Constants.ServiceBusConnectionString, Constants.ServiceBusWriteSideQueue)
@@ -37,7 +37,6 @@ namespace EventSourcing.Tests.Server
             {
                 Console.ReadLine();
             }
-
         }
     }
 }

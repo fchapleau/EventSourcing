@@ -8,15 +8,15 @@ namespace EventSourcing.Processors
 {
     public class EventSourceFactory<T> where T : class, IEntity, new()
     {
-        private Type _aggregateType;
+        private List<Type> _aggregateTypes;
         private ILogging _logger;
         private IMessagingClient _readSide;
         private IMessagingClient _writeSide;
         private IDataAccessLayer<T> DataAccessLayer { get; set; }
-        public EventSourceFactory(IDataAccessLayer<T> dal, Type aggregateType, ILogging logger, IMessagingClient readSideClient, IMessagingClient writeSideClient)
+        public EventSourceFactory(IDataAccessLayer<T> dal, List<Type> aggregateTypes, ILogging logger, IMessagingClient readSideClient, IMessagingClient writeSideClient)
         {
             DataAccessLayer = dal;
-            _aggregateType = aggregateType;
+            _aggregateTypes = aggregateTypes;
             _logger = logger;
             _readSide = readSideClient;
             _writeSide = writeSideClient;
@@ -29,7 +29,7 @@ namespace EventSourcing.Processors
 
         public ReadSideServer<T> CreateReadSideServer(int numberOfThreads, int snapshotFrequency, int snapShotSkewSeconds)
         {
-            return new ReadSideServer<T>(_aggregateType, _logger, DataAccessLayer, CreateReadSideClient(), numberOfThreads, snapshotFrequency, snapShotSkewSeconds);
+            return new ReadSideServer<T>(_aggregateTypes, _logger, DataAccessLayer, CreateReadSideClient(), numberOfThreads, snapshotFrequency, snapShotSkewSeconds);
         }
         public WriteSideServer<T> CreateWriteSideServer(int numberOfThreads)
         {

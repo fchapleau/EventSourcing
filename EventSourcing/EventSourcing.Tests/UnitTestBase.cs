@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EventSourcing.Processors;
 using EventSourcing.InMemoryDal;
 using EventSourcing.Tests.Domain;
+using System.Collections.Generic;
 
 namespace EventSourcing.Tests
 {
@@ -37,7 +38,7 @@ namespace EventSourcing.Tests
 
             Factory = new EventSourceFactory<SymbolEntity>(
                 Dal,
-                typeof(SymbolAgregate), 
+                new List<Type> { typeof(SymbolAgregate) }, 
                 _logger,
                 //new ServiceBusEventSourceClient(Constants.ServiceBusConnectionString, Constants.ServiceBusReadSideQueue), new ServiceBusEventSourceClient(Constants.ServiceBusConnectionString, Constants.ServiceBusWriteSideQueue)
                 new InProcMessagingClient(), new InProcMessagingClient()

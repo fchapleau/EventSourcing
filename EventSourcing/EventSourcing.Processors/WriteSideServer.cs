@@ -29,7 +29,7 @@ namespace EventSourcing.Processors
             for (var i = 0; i < numberOfThreads; i++)
             {
                 var asyncReceive = new Thread(new ParameterizedThreadStart(ProcessAsync));
-                asyncReceive.IsBackground = true;                
+                asyncReceive.IsBackground = true;
                 asyncReceive.Start(i);
 
                 _asyncReceiveThreads.Add(asyncReceive);

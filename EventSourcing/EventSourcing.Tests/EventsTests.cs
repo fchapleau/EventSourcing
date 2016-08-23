@@ -25,6 +25,17 @@ namespace EventSourcing.Tests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void EventsEqualityException()
+        {
+            EntityEvent e1 = new EntityEvent();
+            e1.OrderKey = "111222";
+
+            Exception ex = new Exception();
+            e1.CompareTo(ex);
+        }
+
+        [TestMethod]
         public void EventsGreater()
         {
             EntityEvent e1 = new EntityEvent();

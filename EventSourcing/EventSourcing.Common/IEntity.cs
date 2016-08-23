@@ -1,4 +1,4 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace EventSourcing
 {
-    public interface IEntity : ICloneable  
+    public interface IEntity: ICloneable  
     {
         Guid UId { get; set; }
-        void ReadEntity(IDictionary<string, EntityProperty> properties);
-        IDictionary<string, EntityProperty> WriteEntity();
+        void ReadEntity(IDictionary<string, TypedProperty> properties);
+        IDictionary<string, TypedProperty> WriteEntity();
     }
 }

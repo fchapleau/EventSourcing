@@ -33,10 +33,10 @@ namespace EventSourcing.Processors
         {
             EntityEvent = new EntityEvent();
             var prefix = "Event";
-            var toProcess = new Dictionary<string, EntityProperty>();
+            var toProcess = new Dictionary<string, TypedProperty>();
             foreach (var prop in properties)
                 if(prop.Key.StartsWith(prefix))
-                    toProcess.Add(prop.Key.Substring(prefix.Length), prop.Value);
+                    toProcess.Add(prop.Key.Substring(prefix.Length), new TypedProperty(prop.Value.PropertyAsObject));
             EntityEvent.ReadEntity(toProcess);
         }
 
@@ -46,7 +46,7 @@ namespace EventSourcing.Processors
             var toReturn = new Dictionary<string, EntityProperty>();
             var props = EntityEvent.WriteEntity();
             foreach (var prop in props)
-                toReturn.Add(prefix + prop.Key, prop.Value);
+                toReturn.Add(prefix + prop.Key, EntityProperty.CreateEntityPropertyFromObject(prop.Value));
             return toReturn;
         }
     }

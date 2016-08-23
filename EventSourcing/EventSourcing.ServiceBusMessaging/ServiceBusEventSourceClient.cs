@@ -39,9 +39,9 @@ namespace EventSourcing.ServiceBusMessaging
             writeSideClient.Send(new BrokeredMessage(e));
         }
 
-        public IMessagingEvent Receive()
+        public IMessagingEvent Receive(TimeSpan timeout)
         {
-            return new ServiceBusMessagingEvent(Receiver.Receive());
+            return new ServiceBusMessagingEvent(Receiver.Receive(timeout));
         }
 
         public long MessageWaitingCount()

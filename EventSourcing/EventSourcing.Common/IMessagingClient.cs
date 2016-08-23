@@ -9,7 +9,7 @@ namespace EventSourcing
     public interface IMessagingClient
     {
         void SendMessage(EntityEvent e);
-        IMessagingEvent Receive();
+        IMessagingEvent Receive(TimeSpan timeout);
         long MessageWaitingCount();
 
         long MessageInErrorCount();

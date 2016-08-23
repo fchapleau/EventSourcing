@@ -29,17 +29,21 @@ namespace EventSourcing.InMemoryDal
         public T GetEntity(Guid uId)
         {
             if (_entities.ContainsKey(uId))
-                return _entities[uId];
+                return (T)_entities[uId].Clone();
             else
                 return default(T);
         }
 
         public IOrderedEnumerable<EntityEvent> GetEventsSince(Guid entityId, EntityEvent entityEvent)
         {
+            IEnumerable<EntityEvent> toReturn = new List<EntityEvent>();
+
             if (entityEvent == null)
-                return _events[entityId].OrderByDescending(t => t.OrderKey);
+                toReturn = _events[entityId];
             else
-                return _events[entityId].Where(f => f.OrderKey.CompareTo(entityEvent.OrderKey) < 0).OrderByDescending(f => f.OrderKey);
+                toReturn = _events[entityId].Where(f => f.OrderKey.CompareTo(entityEvent.OrderKey) < 0);
+
+            return toReturn.Select(f => (EntityEvent)f.Clone()).OrderByDescending(t => t.OrderKey);
         }
 
         public void GetLatestSnapShot(Guid UId, out EntityEvent snapshotEvent, out T snapshotEntity)
@@ -47,8 +51,8 @@ namespace EventSourcing.InMemoryDal
             if (_snapshots.ContainsKey(UId))
             {
                 var latestTuple = _snapshots[UId].OrderByDescending(f => f.Item1.OrderKey).LastOrDefault();
-                snapshotEvent = latestTuple.Item1;
-                snapshotEntity = latestTuple.Item2;
+                snapshotEvent = (EntityEvent)latestTuple.Item1.Clone();
+                snapshotEntity = (T)latestTuple.Item2.Clone();
             }
             else
             {

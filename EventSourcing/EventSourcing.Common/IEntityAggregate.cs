@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EventSourcing
 {
-    public interface IEntityAggregate<T> where T :IEntity
+    public interface IEntityAggregate<T> where T : IEntity
     {
         void Initialize(T snapshot, IOrderedEnumerable<EntityEvent> events);
         T Entity { get; }

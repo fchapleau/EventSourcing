@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExclusiveDictionnary.cs" />
+    <Compile Include="ExclusivityManager.cs" />
     <Compile Include="InMemoryDataAccessLayer.cs" />
     <Compile Include="InProcMessagingClient.cs" />
     <Compile Include="InProcMessagingEvent.cs" />

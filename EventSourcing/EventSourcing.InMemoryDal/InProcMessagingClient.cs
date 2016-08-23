@@ -13,6 +13,7 @@ namespace EventSourcing.InMemoryDal
         public InProcMessagingClient()
         {
             _queueId = Guid.NewGuid();
+            InProcMessagingServer.Instance.AddQueue(_queueId);
         }
 
         public void SendMessage(EntityEvent e)
@@ -20,9 +21,9 @@ namespace EventSourcing.InMemoryDal
             InProcMessagingServer.Instance.Enqueue(_queueId, e);
         }
 
-        public IMessagingEvent Receive()
+        public IMessagingEvent Receive(TimeSpan timeout)
         {
-            return InProcMessagingServer.Instance.Dequeue(_queueId);
+            return InProcMessagingServer.Instance.Dequeue(_queueId, timeout);
         }
 
         public long MessageWaitingCount()

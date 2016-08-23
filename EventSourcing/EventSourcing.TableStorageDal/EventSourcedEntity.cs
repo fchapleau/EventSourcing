@@ -31,10 +31,10 @@ namespace EventSourcing.Processors
         public void ReadEntity(IDictionary<string, EntityProperty> properties, OperationContext operationContext)
         {
             var prefix = typeof(T).Name + "";
-            var toProcess = new Dictionary<string, EntityProperty>();
+            var toProcess = new Dictionary<string, TypedProperty>();
             foreach (var prop in properties)
                 if (prop.Key.StartsWith(prefix))
-                    toProcess.Add(prop.Key.Substring(prefix.Length), prop.Value);
+                    toProcess.Add(prop.Key.Substring(prefix.Length), new TypedProperty(prop.Value.PropertyAsObject));
             SourceEntity.ReadEntity(toProcess);
         }
 
@@ -43,7 +43,7 @@ namespace EventSourcing.Processors
             var toReturn = new Dictionary<string, EntityProperty>();
             var props = SourceEntity.WriteEntity();
             foreach (var prop in props)
-                toReturn.Add(typeof(T).Name + "" + prop.Key, prop.Value);
+                toReturn.Add(typeof(T).Name + "" + prop.Key, EntityProperty.CreateEntityPropertyFromObject(prop.Value));
             return toReturn;
         }
     }

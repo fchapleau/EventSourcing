@@ -15,19 +15,19 @@ namespace EventSourcing.Tests.Domain
         public string Name { get; set; }
         public int Quantity { get; set; }
 
-        public void ReadEntity(IDictionary<string, EntityProperty> properties)
+        public void ReadEntity(IDictionary<string, TypedProperty> properties)
         {
-            UId = properties["UId"].GuidValue.Value;
+            UId = properties["UId"].GuidValue;
             Name = properties["Name"].StringValue;
-            Quantity = properties["Quantity"].Int32Value.Value;
+            Quantity = properties["Quantity"].Int32Value;
         }
 
-        public IDictionary<string, EntityProperty> WriteEntity()
+        public IDictionary<string, TypedProperty> WriteEntity()
         {
-            var toReturn = new Dictionary<string, EntityProperty>();
-            toReturn.Add("UId", new EntityProperty(UId));
-            toReturn.Add("Name", new EntityProperty(Name));
-            toReturn.Add("Quantity", new EntityProperty(Quantity));
+            var toReturn = new Dictionary<string, TypedProperty>();
+            toReturn.Add("UId", new TypedProperty(UId));
+            toReturn.Add("Name", new TypedProperty(Name));
+            toReturn.Add("Quantity", new TypedProperty(Quantity));
             return toReturn;
         }
 

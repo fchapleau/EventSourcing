@@ -17,12 +17,12 @@ namespace EventSourcing.Tests
         }
         public void WriteLine(LoggingLevel level, string message)
         {
-            _context.WriteLine(message);
+            _context.WriteLine(DateTime.Now.ToString() + " | " + message);
         }
 
         public void Write(LoggingLevel level, string msg)
         {
-            _context.WriteLine(msg);
+            _context.WriteLine(DateTime.Now.ToString() + " | " + msg);
         }
     }
 }

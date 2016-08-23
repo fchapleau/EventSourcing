@@ -11,31 +11,20 @@ namespace EventSourcing.InMemoryDal
     internal class InProcMessagingServer
     {
         private long _sequence;
-
-        private ConcurrentDictionary<Guid, ConcurrentQueue<InProcMessagingEvent>> _queues;
-
-        private ConcurrentQueue<InProcMessagingEvent> GetQueue(Guid queueId)
-        {
-            Monitor.Enter(_queues);
-            if (!_queues.ContainsKey(queueId))
-                _queues.AddOrUpdate(queueId, new ConcurrentQueue<InProcMessagingEvent>(), (key, value) => new ConcurrentQueue<InProcMessagingEvent>());
-            Monitor.Exit(_queues);
-
-            return _queues[queueId];
-        }
-
-        private ConcurrentDictionary<Guid, ConcurrentBag<InProcMessagingEvent>> _inProgress;
-        private ConcurrentDictionary<Guid, ConcurrentBag<InProcMessagingEvent>> _abandons;
-        private ConcurrentDictionary<Guid, ConcurrentBag<InProcMessagingEvent>> _deadLetters;
+        private ExclusivityManager _bagManager;
 
         private InProcMessagingServer() 
         {
-            _queues = new ConcurrentDictionary<Guid, ConcurrentQueue<InProcMessagingEvent>>();
-            _inProgress = new ConcurrentDictionary<Guid, ConcurrentBag<InProcMessagingEvent>>();
-            _abandons = new ConcurrentDictionary<Guid, ConcurrentBag<InProcMessagingEvent>>();
-            _deadLetters = new ConcurrentDictionary<Guid, ConcurrentBag<InProcMessagingEvent>>();
+            _bagManager = new ExclusivityManager();
             _sequence = 0;
         }
+
+        internal void AddQueue(Guid queueId)
+        {
+            _bagManager.AddQueue(queueId);
+        }
+
+        #region Instance
 
         private static InProcMessagingServer _server;
         public static InProcMessagingServer Instance
@@ -51,36 +40,57 @@ namespace EventSourcing.InMemoryDal
             }
         }
 
+        #endregion
+
+        #region Complete / Abandon / Deadletter / ErrorCount
+
         internal void Complete(Guid queueId, InProcMessagingEvent inProcMessagingEvent)
         {
-            Monitor.Enter(_inProgress);
-            if (!_inProgress.ContainsKey(queueId)) _inProgress.AddOrUpdate(queueId, new ConcurrentBag<InProcMessagingEvent>(), (key, value) => new ConcurrentBag<InProcMessagingEvent>());
-            Monitor.Exit(_inProgress);
-
-            _inProgress[queueId].TryTake(out inProcMessagingEvent);
-        }
-
-        internal void DeadLetter(Guid queueId, InProcMessagingEvent inProcMessagingEvent)
-        {
-            Monitor.Enter(_deadLetters);
-            if (!_deadLetters.ContainsKey(queueId)) _deadLetters.AddOrUpdate(queueId, new ConcurrentBag<InProcMessagingEvent>(), (key, value) => new ConcurrentBag<InProcMessagingEvent>());
-            Monitor.Exit(_deadLetters);
-
-            _deadLetters[queueId].Add(inProcMessagingEvent);
-            Complete(queueId, inProcMessagingEvent);
+            using (var bag = _bagManager.GetNonExclusiveBag(ExclusiveBagsName.InProgress))
+            {
+                var queue =  bag.GetById(queueId);
+                queue.TryTake(out inProcMessagingEvent);
+            }
         }
 
         internal void Abandon(Guid queueId, InProcMessagingEvent inProcMessagingEvent)
         {
-            Monitor.Enter(_abandons);
-            if (!_abandons.ContainsKey(queueId)) _abandons.AddOrUpdate(queueId, new ConcurrentBag<InProcMessagingEvent>(), (key, value) => new ConcurrentBag<InProcMessagingEvent>());
-            Monitor.Exit(_abandons);
-
-            _abandons[queueId].Add(inProcMessagingEvent);
+            using (var bag = _bagManager.GetNonExclusiveBag(ExclusiveBagsName.Abandon))
+            {
+                var queue = bag.GetById(queueId);
+                queue.Add(inProcMessagingEvent);
+            }
+            
             Complete(queueId, inProcMessagingEvent);
         }
-                
-        internal IMessagingEvent Dequeue(Guid queueId)
+
+        internal void DeadLetter(Guid queueId, InProcMessagingEvent inProcMessagingEvent)
+        {
+            using (var bag = _bagManager.GetNonExclusiveBag(ExclusiveBagsName.DeadLetter))
+            {
+                var queue = bag.GetById(queueId);
+                queue.Add(inProcMessagingEvent);
+            }
+
+            Complete(queueId, inProcMessagingEvent);
+        }
+        
+        internal long ErrorCount(Guid _queueId)
+        {
+            using (var deadLetters = _bagManager.GetExclusiveBag(ExclusiveBagsName.DeadLetter))
+            {
+                using (var abandons = _bagManager.GetExclusiveBag(ExclusiveBagsName.Abandon))
+                {
+                    return deadLetters.Items.Sum(f => f.Value.Count()) + abandons.Items.Sum(f => f.Value.Count());
+                }
+            }
+        }
+
+        #endregion
+
+        #region Queuing Implementation
+
+        internal IMessagingEvent Dequeue(Guid queueId, TimeSpan timeout)
         {
             
             var start = DateTime.Now;
@@ -88,41 +98,44 @@ namespace EventSourcing.InMemoryDal
             InProcMessagingEvent e = null;
             do
             {
-                Monitor.Enter(_inProgress);
-                GetQueue(queueId).TryDequeue(out e);
-                if (e != null)
-                {
-                    if (!_inProgress.ContainsKey(queueId)) _inProgress.AddOrUpdate(queueId, new ConcurrentBag<InProcMessagingEvent>(), (key, value) => new ConcurrentBag<InProcMessagingEvent>());
-                    _inProgress[queueId].Add(e);
+                using (var queue = _bagManager.GetExclusiveQueue())
+                {                        
+                    if (queue.GetById(queueId).TryDequeue(out e))
+                    {
+                        using (var inprogress = _bagManager.GetExclusiveBag(ExclusiveBagsName.InProgress))
+                        {
+                            inprogress.GetById(queueId).Add(e);
+                        }
+                    }
                 }
-                Monitor.Exit(_inProgress);
-                Thread.Sleep(100);
+                if(e==null)
+                    Thread.Sleep(100);
             }
-            while (e == null && (DateTime.Now - start).Milliseconds < 10000);
-
+            while (e == null && (DateTime.Now - start) < timeout);
 
             return e;
         }
 
         internal void Enqueue(Guid queueId, EntityEvent e)
         {
-            Monitor.Enter(this);
-            GetQueue(queueId).Enqueue(new InProcMessagingEvent(this, e, _sequence++, queueId));
-            Monitor.Exit(this);
+            using (var queue = _bagManager.GetNonExclusiveQueue())
+            {
+                queue.GetById(queueId).Enqueue(new InProcMessagingEvent(this, e, _sequence++, queueId));
+            }
         }
 
         internal long Count(Guid queueId)
         {
-            Monitor.Enter(_inProgress);
-            if (!_inProgress.ContainsKey(queueId)) _inProgress.AddOrUpdate(queueId, new ConcurrentBag<InProcMessagingEvent>(), (key, value) => new ConcurrentBag<InProcMessagingEvent>());
-            Monitor.Exit(_inProgress);
-
-            return GetQueue(queueId).Count() + _inProgress[queueId].Count();
+            using (var queue = _bagManager.GetExclusiveQueue())
+            {
+                using (var bag = _bagManager.GetExclusiveBag(ExclusiveBagsName.InProgress))
+                {
+                    return queue.GetById(queueId).Count() + bag.GetById(queueId).Count();
+                }
+            }
         }
 
-        internal long ErrorCount(Guid _queueId)
-        {
-            return _deadLetters.Sum(f => f.Value.Count()) + _abandons.Sum(f => f.Value.Count());
-        }
+        #endregion
+
     }
 }

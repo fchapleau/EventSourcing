@@ -16,7 +16,7 @@ namespace EventSourcing.Tests
         [TestInitialize]
         public void TestInitialize()
         {
-            Initialize(10, 10);
+            Initialize(10, 10, 10,10);
         }
 
         [TestMethod]
@@ -30,12 +30,13 @@ namespace EventSourcing.Tests
 
             var client = Factory.CreateProjectionClient();
 
-            WaitForClients(writeClient, readClient);
+            WaitForClients(writeClient, readClient, 5000);
 
             var entity = client.GetEntity(symbol.UId);
             Assert.IsNotNull(entity);
             Assert.AreEqual(entity.Name, symbol.Name);
             Assert.AreEqual(entity.Quantity, symbol.Quantity);
+            Assert.IsTrue(entity.Equals(symbol));
         }
 
         [TestMethod]
@@ -49,7 +50,7 @@ namespace EventSourcing.Tests
 
             var client = Factory.CreateProjectionClient();
 
-            WaitForClients(writeClient, readClient);
+            WaitForClients(writeClient, readClient, 5000);
 
             var entity = client.GetEntity(symbol.UId);
             Assert.AreEqual(entity.Name, symbol.Name);
@@ -57,7 +58,7 @@ namespace EventSourcing.Tests
             
             writeClient.SendMessage(SymbolEvent.CreateBuyRequest(symbol.UId, 100));
 
-            WaitForClients(writeClient, readClient);
+            WaitForClients(writeClient, readClient, 5000);
 
             entity = client.GetEntity(symbol.UId);
             Assert.AreEqual(symbol.Quantity + 100, entity.Quantity );
@@ -68,7 +69,7 @@ namespace EventSourcing.Tests
             writeClient.SendMessage(SymbolEvent.CreateSellRequest(symbol.UId, 100, (int.MaxValue - 4).ToString()));
             writeClient.SendMessage(SymbolEvent.CreateBuyRequest(symbol.UId, 100, (int.MaxValue - 5).ToString()));
 
-            WaitForClients(writeClient, readClient);
+            WaitForClients(writeClient, readClient, 5000);
 
             entity = client.GetEntity(symbol.UId);
             Assert.AreEqual(symbol.Quantity, entity.Quantity);

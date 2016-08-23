@@ -29,7 +29,7 @@ namespace EventSourcing.Tests
 
         protected IDataAccessLayer<SymbolEntity> Dal { get; private set; }
 
-        public void Initialize(int numberofWriteThreads, int numberofReadThreads)
+        public void Initialize(int numberofWriteThreads, int numberofReadThreads, int? snapshotFrequency, int? snapShotSkewSeconds)
         {
             _logger = new TestContextLogger(TestContext);
 
@@ -48,15 +48,15 @@ namespace EventSourcing.Tests
                 _writeSideProcessor = Factory.CreateWriteSideServer(numberofWriteThreads);
 
             if (numberofReadThreads > 0)
-                _readSideProcessor = Factory.CreateReadSideServer(numberofReadThreads, 10, 10);
+                _readSideProcessor = Factory.CreateReadSideServer(numberofReadThreads, snapshotFrequency, snapShotSkewSeconds);
         }
 
-        internal void WaitForClients(IMessagingClient writeClient, IMessagingClient readClient)
+        internal void WaitForClients(IMessagingClient writeClient, IMessagingClient readClient, long timeout)
         {
             DateTime start = DateTime.Now;
             bool stale = false;
             long currentWaitCount = writeClient.MessageWaitingCount() + readClient.MessageWaitingCount();
-            while (currentWaitCount > 0 && !(stale && (DateTime.Now - start).TotalMilliseconds > 60000))
+            while (currentWaitCount > 0 && !(stale && (DateTime.Now - start).TotalMilliseconds > timeout))
             {
                 var beforeWaitCount = writeClient.MessageWaitingCount() + readClient.MessageWaitingCount();
                 Thread.Sleep(1000);

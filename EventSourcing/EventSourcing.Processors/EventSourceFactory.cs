@@ -27,7 +27,7 @@ namespace EventSourcing.Processors
             return new ProjectionClient<T>(DataAccessLayer);
         }
 
-        public ReadSideServer<T> CreateReadSideServer(int numberOfThreads, int snapshotFrequency, int snapShotSkewSeconds)
+        public ReadSideServer<T> CreateReadSideServer(int numberOfThreads, int? snapshotFrequency, int? snapShotSkewSeconds)
         {
             return new ReadSideServer<T>(_aggregateTypes, _logger, DataAccessLayer, CreateReadSideClient(), numberOfThreads, snapshotFrequency, snapShotSkewSeconds);
         }

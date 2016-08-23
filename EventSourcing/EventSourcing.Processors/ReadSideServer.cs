@@ -10,17 +10,17 @@ using System.Threading.Tasks;
 
 namespace EventSourcing.Processors
 {
-    public class ReadSideServer<T> where T : class, IEntity, new()
+    public class ReadSideServer<T>: IDisposable where T : class, IEntity, new()
     {
-        private int _snapshotFrequency;
-        private int _snapShotSkewSeconds;
+        private int? _snapshotFrequency;
+        private int? _snapShotSkewSeconds;
         private List<Thread> _asyncReceiveThreads;
         private ILogging _logger;
         private IDataAccessLayer<T> _dal;
         private List<Type> _aggregateTypes;
         private IMessagingClient _readSideClient;
 
-        internal ReadSideServer(List<Type> aggregateTypes, ILogging logger, IDataAccessLayer<T> dal, IMessagingClient readSideClient, int numberOfThreads, int snapshotFrequency, int snapShotSkewSeconds)
+        internal ReadSideServer(List<Type> aggregateTypes, ILogging logger, IDataAccessLayer<T> dal, IMessagingClient readSideClient, int numberOfThreads, int? snapshotFrequency, int? snapShotSkewSeconds)
         {
             _aggregateTypes = aggregateTypes;
             _logger = logger;
@@ -46,7 +46,7 @@ namespace EventSourcing.Processors
             {
                 try
                 {
-                    var eventReceived = _readSideClient.Receive();
+                    var eventReceived = _readSideClient.Receive(TimeSpan.FromSeconds(10));
                     if (eventReceived == null) continue;
 
 
@@ -56,15 +56,19 @@ namespace EventSourcing.Processors
                         {
                             ConstructorInfo ctor = aggregateType.GetConstructor(Type.EmptyTypes);
                             var aggregate = ctor.Invoke(null) as IEntityAggregate<T>;
-                            var aggregateWithoutSnapshot = ctor.Invoke(null) as IEntityAggregate<T>;
-
+                            
                             // Get the latest snapshot
                             EntityEvent snapshotEvent = null;
                             T snapshotEntity = default(T);
                             _dal.GetLatestSnapShot(eventReceived.Event.EntityUId, out snapshotEvent, out snapshotEntity);
 
+                            if(_snapshotFrequency.HasValue && _snapShotSkewSeconds.HasValue && snapshotEvent == null)
+                                _logger.WriteLine(LoggingLevel.Warning, string.Format("Not using a snapshot for Entity {0}.", eventReceived.Event.EntityUId.ToString()));
+
                             // Get all events after the snapshot
                             var eventSourcedEvents = _dal.GetEventsSince(eventReceived.Event.EntityUId, snapshotEvent);
+
+                            #region Bypassing processing if another ReadSide Worker already processed all incoming events, including this one
 
                             if (eventSourcedEvents.Count() == 0)
                             {
@@ -73,32 +77,47 @@ namespace EventSourcing.Processors
                                 continue;
                             }
 
-                            // Update the Projection according to the latest snapshot and all remaining events
-                            aggregate.Initialize((snapshotEntity == null) ? null : snapshotEntity.Clone() as T, eventSourcedEvents);
-                            aggregateWithoutSnapshot.Initialize(null, _dal.GetEventsSince(eventReceived.Event.EntityUId, null));
+                            #endregion
 
-                            if (snapshotEntity != null && !aggregate.Entity.Equals(aggregateWithoutSnapshot.Entity) && Debugger.IsAttached)
-                            {
-                                Debugger.Break();
-                            }
+                            // Update the Projection according to the latest snapshot and all remaining events
+                            aggregate.Initialize((snapshotEntity == null) ? null : snapshotEntity as T, eventSourcedEvents);
+
+                            #region DEBUG - Compare with a non-snapshoted entity
+
+                            //var aggregateWithoutSnapshot = ctor.Invoke(null) as IEntityAggregate<T>;
+                            //aggregateWithoutSnapshot.Initialize(null, _dal.GetEventsSince(eventReceived.Event.EntityUId, null));
+
+                            //if (snapshotEntity != null && !aggregate.Entity.Equals(aggregateWithoutSnapshot.Entity) && Debugger.IsAttached)
+                            //{
+                            //    Debugger.Break();
+                            //}
+
+                            #endregion
 
                             _dal.InsertEntity(aggregate.Entity);
 
-                            // If there is enough events, create a new snapshot
-                            var eventsBeforeSkew = aggregate.GetEventsOlderthan(DateTime.Now.AddSeconds(-_snapShotSkewSeconds));
+                            #region Snapshot Management
 
-                            if (eventsBeforeSkew.Count() > _snapshotFrequency)
+                            if (_snapshotFrequency.HasValue && _snapShotSkewSeconds.HasValue)
                             {
-                                var snapshotInstance = ctor.Invoke(null) as IEntityAggregate<T>;
-                                T clone = (snapshotEntity == null) ? null : snapshotEntity.Clone() as T;
-                                snapshotInstance.Initialize(clone, eventsBeforeSkew);
-                                _dal.InsertSnapshot(snapshotInstance.Entity, snapshotInstance.LatestEvent);
-                                _logger.WriteLine(LoggingLevel.Warning,
-                                    string.Format("Snapshot created for Entity {0} and {1} events out of {2} total events.",
-                                    aggregate.Entity.UId.ToString(),
-                                    eventsBeforeSkew.Count(),
-                                    eventSourcedEvents.Count()));
+                                // If there is enough events, create a new snapshot
+                                var eventsBeforeSkew = aggregate.GetEventsOlderthan(DateTime.Now.AddSeconds(-_snapShotSkewSeconds.Value));
+
+                                if (eventsBeforeSkew.Count() > _snapshotFrequency)
+                                {
+                                    var snapshotInstance = ctor.Invoke(null) as IEntityAggregate<T>;
+                                    snapshotInstance.Initialize(snapshotEntity, eventsBeforeSkew);
+                                    _dal.InsertSnapshot(snapshotInstance.Entity, snapshotInstance.LatestEvent);
+
+                                    _logger.WriteLine(LoggingLevel.Warning,
+                                        string.Format("Snapshot created for Entity {0} and {1} events out of {2} total events.",
+                                        aggregate.Entity.UId.ToString(),
+                                        eventsBeforeSkew.Count(),
+                                        eventSourcedEvents.Count()));
+                                }
                             }
+
+                            #endregion
 
                             // Complete the transaction
                             eventReceived.Complete();
@@ -121,6 +140,14 @@ namespace EventSourcing.Processors
                 {
                     _logger.WriteLine(LoggingLevel.Verbose, "Error when trying to receive a message" + e.ToString());
                 }
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach(var thread in _asyncReceiveThreads)
+            {
+                thread.Abort();
             }
         }
     }

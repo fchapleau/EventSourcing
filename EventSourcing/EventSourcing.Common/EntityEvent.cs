@@ -1,5 +1,4 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 namespace EventSourcing
 {
     [Serializable]
-    public class EntityEvent : IComparable, IEquatable<EntityEvent> 
+    public class EntityEvent : IComparable, IEquatable<EntityEvent>, ICloneable
     {
         public EntityEvent()
         {
@@ -21,30 +20,30 @@ namespace EventSourcing
         public Dictionary<string, string> Properties { get; set; }
         public string OrderKey { get; set; }
 
-        public void ReadEntity(IDictionary<string, EntityProperty> properties)
+        public void ReadEntity(IDictionary<string, TypedProperty> properties)
         {
             foreach (var propertypair in properties)
             {
                 if (propertypair.Key == "EventEventType") EventType = propertypair.Value.StringValue;
-                else if (propertypair.Key == "EventEventUId") EventUId = propertypair.Value.GuidValue.Value;
-                else if (propertypair.Key == "EventEntityUId") EntityUId = propertypair.Value.GuidValue.Value;
-                else if (propertypair.Key == "EventEventTimestamp") EventTimeStamp = DateTimeOffset.Parse(propertypair.Value.StringValue);
+                else if (propertypair.Key == "EventEventUId") EventUId = propertypair.Value.GuidValue;
+                else if (propertypair.Key == "EventEntityUId") EntityUId = propertypair.Value.GuidValue;
+                else if (propertypair.Key == "EventEventTimestamp") EventTimeStamp = propertypair.Value.DateTimeOffsetValue;
                 else if (propertypair.Key == "EventOrderKey") OrderKey = propertypair.Value.StringValue;
-                else if (propertypair.Value.PropertyType == EdmType.String)
-                    Properties.Add(propertypair.Key, propertypair.Value.StringValue);
+                else 
+                    Properties.Add(propertypair.Key, propertypair.Value.ToString());
             }
         }
-        public IDictionary<string, EntityProperty> WriteEntity()
+        public IDictionary<string, TypedProperty> WriteEntity()
         {
-            var output = new Dictionary<string, EntityProperty>();
-            output.Add("EventEventType", new EntityProperty(EventType));
-            output.Add("EventEventUId", new EntityProperty(EventUId));
-            output.Add("EventEntityUId", new EntityProperty(EntityUId));
-            output.Add("EventEventTimestamp", new EntityProperty(EventTimeStamp.ToString()));
-            output.Add("EventOrderKey", new EntityProperty(OrderKey));
+            var output = new Dictionary<string, TypedProperty>();
+            output.Add("EventEventType", new TypedProperty(EventType));
+            output.Add("EventEventUId", new TypedProperty(EventUId));
+            output.Add("EventEntityUId", new TypedProperty(EntityUId));
+            output.Add("EventEventTimestamp", new TypedProperty(EventTimeStamp.ToString()));
+            output.Add("EventOrderKey", new TypedProperty(OrderKey));
 
             foreach (var propertypair in Properties)
-                output.Add(propertypair.Key, new EntityProperty(propertypair.Value));
+                output.Add(propertypair.Key, new TypedProperty(propertypair.Value));
             return output;
         }
 
@@ -73,6 +72,11 @@ namespace EventSourcing
         {
             if (!(obj is EntityEvent)) return false;
             return this.Equals((EntityEvent)obj);
+        }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
         }
     }
 }

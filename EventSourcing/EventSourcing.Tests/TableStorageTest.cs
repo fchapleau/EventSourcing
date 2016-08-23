@@ -15,7 +15,7 @@ namespace EventSourcing.Tests
         [TestInitialize]
         public void TestInitialize()
         {
-            Initialize(10, 10);
+            Initialize(10, 10, 10,10);
         }
         
         [TestMethod]

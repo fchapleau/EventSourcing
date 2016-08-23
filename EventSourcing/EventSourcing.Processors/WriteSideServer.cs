@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EventSourcing.Processors
 {
-    public class WriteSideServer<T> where T :IEntity, new()
+    public class WriteSideServer<T>: IDisposable where T :IEntity, new()
     {
         private IMessagingClient _writeSideClient;
         private IMessagingClient _readSideClient;
@@ -42,7 +42,7 @@ namespace EventSourcing.Processors
             {
                 try
                 {
-                    using (var retrievedMessage = _writeSideClient.Receive())
+                    using (var retrievedMessage = _writeSideClient.Receive(TimeSpan.FromSeconds(10)))
                     {
                         if (retrievedMessage == null) continue;
 
@@ -74,6 +74,14 @@ namespace EventSourcing.Processors
                 {
                     _logger.WriteLine(LoggingLevel.Error, "Error when trying to receive a message" + e.ToString());
                 }
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (var thread in _asyncReceiveThreads)
+            {
+                thread.Abort();
             }
         }
     }

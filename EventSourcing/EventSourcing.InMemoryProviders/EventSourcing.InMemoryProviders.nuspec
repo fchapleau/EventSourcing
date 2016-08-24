@@ -14,5 +14,8 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>eventsourcing</tags>
+    <dependencies>
+      <dependency id="EventSourcing.Common" version="1.0.0" />
+    </dependencies>
   </metadata>
 </package>

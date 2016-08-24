@@ -8,11 +8,21 @@
     <owners>$author$</owners>
     <licenseUrl>https://github.com/fchapleau/EventSourcing</licenseUrl>
     <projectUrl>https://github.com/fchapleau/EventSourcing</projectUrl>
-    <iconUrl></iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>eventsourcing</tags>
+    <dependencies>
+      <dependency id="EventSourcing.Common" version="1.0.0" />
+      <dependency id="Microsoft.Azure.KeyVault.Core" version="1.0.0"/>
+      <dependency id="Microsoft.Data.Edm" version="5.7.0"/>
+      <dependency id="Microsoft.Data.OData" version="5.7.0"/>
+      <dependency id="Microsoft.Data.Services.Client" version="5.7.0"/>
+      <dependency id="Microsoft.WindowsAzure.ConfigurationManager" version="3.2.1"/>
+      <dependency id="Newtonsoft.Json" version="9.0.1"/>
+      <dependency id="System.Spatial" version="5.7.0"/>
+      <dependency id="WindowsAzure.Storage" version="7.2.0"/>
+    </dependencies>
   </metadata>
 </package>

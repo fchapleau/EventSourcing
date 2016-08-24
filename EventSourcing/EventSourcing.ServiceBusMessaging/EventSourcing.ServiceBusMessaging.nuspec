@@ -14,5 +14,10 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>eventsourcing</tags>
+    <dependencies>
+      <dependency id="EventSourcing.Common" version="1.0.0" />
+      <dependency id="Microsoft.WindowsAzure.ConfigurationManager" version="3.2.1" />
+      <dependency id="WindowsAzure.ServiceBus" version="3.3.2" />
+    </dependencies>
   </metadata>
 </package>

@@ -73,12 +73,12 @@ namespace EventSourcing.Tests
         }
 
 
-        [TestMethod]
-        public void ParallelSend5000ParallelProcessing10()
-        {
-            Initialize(10, 10, 10, 10);
-            ParallelSendEventsAndValidate(5000);
-        }
+        //[TestMethod]
+        //public void ParallelSend5000ParallelProcessing10()
+        //{
+        //    Initialize(10, 10, 10, 10);
+        //    ParallelSendEventsAndValidate(5000);
+        //}
 
         [TestMethod]
         public void ParallelSend1000ParallelProcessing10NoSnapshot()
@@ -87,12 +87,12 @@ namespace EventSourcing.Tests
             ParallelSendEventsAndValidate(1000);
         }
 
-        [TestMethod]
-        public void ParallelSend5000ParallelProcessing10NoSnapshot()
-        {
-            Initialize(10, 10, null, null);
-            ParallelSendEventsAndValidate(5000);
-        }
+        //[TestMethod]
+        //public void ParallelSend5000ParallelProcessing10NoSnapshot()
+        //{
+        //    Initialize(10, 10, null, null);
+        //    ParallelSendEventsAndValidate(5000);
+        //}
 
         public void ParallelSendEventsAndValidate(int numberOfTxs)
         {

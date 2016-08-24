@@ -6,8 +6,8 @@ using System.Collections.Generic;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using EventSourcing.InMemoryDal;
 using EventSourcing.Tests.Domain;
+using EventSourcing.InMemoryDal;
 
 namespace EventSourcing.Tests
 {

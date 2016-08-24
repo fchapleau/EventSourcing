@@ -114,6 +114,10 @@
       <Project>{84676e35-807e-44f7-82ea-eba955550906}</Project>
       <Name>EventSourcing.Tests.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EventSourcing.InMemoryProviders\EventSourcing.InMemoryProviders.csproj">
+      <Project>{6B262C08-04C7-4002-B297-375436D58C45}</Project>
+      <Name>EventSourcing.InMemoryProviders</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EventSourcing.Processors\EventSourcing.Processors.csproj">
       <Project>{70f930cc-01ff-4ee4-868e-448271a9c2d4}</Project>
       <Name>EventSourcing.Processors</Name>

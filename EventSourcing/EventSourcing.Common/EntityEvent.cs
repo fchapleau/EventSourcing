@@ -52,6 +52,11 @@ namespace EventSourcing
             return string.Format("EventId : {0} | Timestamp: {1} | Event Type: {2} | Entity UId: {3} ", EventUId, EventTimeStamp.ToString(), EventType, EntityUId);
         }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         public int CompareTo(object obj)
         {
             if (!(obj is EntityEvent)) throw new ArgumentOutOfRangeException("obj");

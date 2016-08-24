@@ -8,9 +8,9 @@ using Microsoft.WindowsAzure.Storage.Table;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using EventSourcing.Processors;
-using EventSourcing.InMemoryDal;
 using EventSourcing.Tests.Domain;
 using System.Collections.Generic;
+using EventSourcing.InMemoryDal;
 
 namespace EventSourcing.Tests
 {
